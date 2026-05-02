@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KBO Player Stats Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Chart.js and Annotation Plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <div class="logo">
+                <span class="highlight">KBO</span> STATS TRACKER
+            </div>
+            <nav>
+                <button id="btn-pitchers" class="active">Pitcher Comparison</button>
+                <button id="btn-hitter">Hitter Stats</button>
+            </nav>
+            <div class="update-info">
+                Last Updated: <span id="last-update">-</span>
+            </div>
+        </header>
+
+        <main>
+            <!-- Pitcher Comparison Section -->
+            <section id="pitcher-section" class="content-section">
+                <div class="top-controls">
+                    <div class="controls">
+                        <div class="year-selector">
+                            <label for="year-select">Season:</label>
+                            <select id="year-select">
+                                <option value="2026">2026</option>
+                                <option value="2025">2025</option>
+                                <option value="2024">2024</option>
+                                <option value="2023">2023</option>
+                                <option value="2022">2022</option>
+                            </select>
+                        </div>
+                        <div class="stat-selector">
+                            <label for="stat-select">Metric:</label>
+                            <select id="stat-select">
+                                <option value="ERA">ERA (평균자책점)</option>
+                                <option value="WHIP">WHIP (이닝당 출루 허용)</option>
+                                <option value="G">G (경기 수)</option>
+                                <option value="W">W (승)</option>
+                                <option value="L">L (패)</option>
+                                <option value="SV">SV (세이브)</option>
+                                <option value="HLD">HLD (홀드)</option>
+                                <option value="IP_val">IP (이닝 소화)</option>
+                                <option value="SO">SO (탈삼진)</option>
+                                <option value="WPCT">WPCT (승률)</option>
+                                <option value="BB/9">BB/9 (9이닝당 볼넷)</option>
+                                <option value="K/9">K/9 (9이닝당 탈삼진)</option>
+                                <option value="K/BB">K/BB (삼진/볼넷 비율)</option>
+                                <option value="HR/9">HR/9 (9이닝당 피홈런)</option>
+                                <option value="H">H (피안타)</option>
+                                <option value="HR">HR (피홈런)</option>
+                                <option value="BB">BB (볼넷)</option>
+                                <option value="HBP">HBP (사구)</option>
+                                <option value="R">R (실점)</option>
+                                <option value="ER">ER (자책점)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="benchmark-legend glass">
+                        <span class="legend-item top">Top</span>
+                        <span class="legend-item mid">Avg</span>
+                        <span class="legend-item low">Low</span>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="pitcherChart"></canvas>
+                </div>
+
+                <div class="table-container glass">
+                    <table id="pitcher-table">
+                        <thead>
+                            <tr>
+                                <th>Rank(순위)</th>
+                                <th>Player(선수)</th>
+                                <th>Team(팀)</th>
+                                <th>G(경기)</th>
+                                <th>ERA(평균자책점)</th>
+                                <th>WHIP(이닝당 출루 허용)</th>
+                                <th>W-L(승-패)</th>
+                                <th>WPCT(승률)</th>
+                                <th>IP(이닝)</th>
+                                <th>SO(탈삼진)</th>
+                                <th>H/HR(피안타/피홈런)</th>
+                                <th>BB/HBP(볼넷/사구)</th>
+                                <th>R/ER(실점/자책점)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Data injected here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Glossary Section -->
+                <div class="glossary-section">
+                    <h3>Indicator Glossary</h3>
+                    <div class="glossary-grid">
+                        <div class="glossary-item glass"><strong>ERA (평균자책점)</strong><span>9이닝당 평균 자책점</span></div>
+                        <div class="glossary-item glass"><strong>WHIP (이닝당 출루 허용)</strong><span>이닝당 허용한 안타+볼넷 수</span></div>
+                        <div class="glossary-item glass"><strong>G / IP</strong><span>출장 경기 수 / 소화 이닝 수</span></div>
+                        <div class="glossary-item glass"><strong>W / L / WPCT</strong><span>승 / 패 / 승률</span></div>
+                        <div class="glossary-item glass"><strong>SV / HLD</strong><span>세이브 / 홀드</span></div>
+                        <div class="glossary-item glass"><strong>BB / HBP</strong><span>볼넷 / 몸에 맞는 공</span></div>
+                        <div class="glossary-item glass"><strong>SO (탈삼진)</strong><span>삼진을 잡아낸 횟수</span></div>
+                        <div class="glossary-item glass"><strong>H / HR</strong><span>피안타 / 피홈런</span></div>
+                        <div class="glossary-item glass"><strong>R / ER</strong><span>총 실점 / 자책점</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Hitter Stats Section (Kim Geon-hee) -->
+            <section id="hitter-section" class="content-section hidden">
+                <div class="player-profile glass">
+                    <div class="profile-header">
+                        <h2 id="hitter-name">-</h2>
+                        <span class="team-badge" id="hitter-team">-</span>
+                    </div>
+                    <div class="profile-stats">
+                        <div class="stat-box">
+                            <span class="label">AVG</span>
+                            <span class="value" id="current-avg">.000</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="label">HR</span>
+                            <span class="value" id="current-hr">0</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="label">RBI</span>
+                            <span class="value" id="current-rbi">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hitter-records-container">
+                    <div class="table-card glass">
+                        <h3>Yearly Records(연도별 상세 기록)</h3>
+                        <div class="table-container">
+                            <table id="hitter-table">
+                                <thead>
+                                    <tr>
+                                        <th>Year(연도)</th>
+                                        <th>AVG(타율)</th>
+                                        <th>G(경기)</th>
+                                        <th>H(안타)</th>
+                                        <th>HR(홈런)</th>
+                                        <th>RBI(타점)</th>
+                                        <th>OPS(출루율+장타율)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Data injected here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 KBO Stats Tracker. Data updated nightly at 11 PM KST.</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
